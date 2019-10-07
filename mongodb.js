@@ -1,6 +1,8 @@
-const mongoDB = require("mongodb");
-const MongoClient = mongoDB.MongoClient; // access to functions related to database
-const ObjectID = mongodb.ObjectID;
+// const mongoDB = require("mongodb");
+// const MongoClient = mongoDB.MongoClient; // access to functions related to database
+// const ObjectID = mongodb.ObjectID;
+
+const { MongoClient, ObjectID } = require("mongodb");
 
 const connectionURL = "mongodb://127.0.0.1:27017"; // connects to localhost server
 const database = "node-tasks";
