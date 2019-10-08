@@ -12,23 +12,37 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true, useUnifiedTopology: 
     return console.log("Unable to connect to database.");
   } else {
     const db = client.db(database);
-    db.collection("tasks").insertMany([
-      {
-        description: "Complete Node task manager",
-        completed: true
-      }, {
-        description: "Gym workout",
-        completed: false
-      },
-      {
-        description: "Plan travels",
-        completed: true
+
+    // CRUD #1: Adding collections
+    db.collection("tasks").insertMany(
+      [
+        {
+          description: "Complete Node task manager",
+          completed: true
+        }, {
+          description: "Gym workout",
+          completed: false
+        },
+        {
+          description: "Plan travels",
+          completed: true
+        }
+      ],
+      (error, result) => {
+        if (error) {
+          return console.log("Unable to add tasks.");
+        } else {
+          console.log(result.ops);
+        };
       }
-    ], (error, result) => {
+    );
+
+    // CRUD #2: Reading collections
+    db.collection("tasks").find({ completed: false }).toArray((error, tasks) => {
       if (error) {
-        return console.log("Unable to add tasks.");
+        return console.log("Unable to find tasks.");
       } else {
-        console.log(result.ops);
+        console.log(tasks);
       };
     });
   };
