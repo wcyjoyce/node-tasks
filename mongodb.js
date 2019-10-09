@@ -13,37 +13,51 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true, useUnifiedTopology: 
   } else {
     const db = client.db(database);
 
-    // CRUD #1: Adding collections
-    db.collection("tasks").insertMany(
-      [
-        {
-          description: "Complete Node task manager",
-          completed: true
-        }, {
-          description: "Gym workout",
-          completed: false
-        },
-        {
-          description: "Plan travels",
-          completed: true
-        }
-      ],
-      (error, result) => {
-        if (error) {
-          return console.log("Unable to add tasks.");
-        } else {
-          console.log(result.ops);
-        };
-      }
-    );
+    // // CRUD #1: Adding collections
+    // db.collection("tasks").insertMany(
+    //   [
+    //     {
+    //       description: "Complete Node task manager",
+    //       completed: true
+    //     }, {
+    //       description: "Gym workout",
+    //       completed: false
+    //     },
+    //     {
+    //       description: "Plan travels",
+    //       completed: true
+    //     }
+    //   ],
+    //   (error, result) => {
+    //     if (error) {
+    //       return console.log("Unable to add tasks.");
+    //     } else {
+    //       console.log(result.ops);
+    //     };
+    //   }
+    // );
 
-    // CRUD #2: Reading collections
-    db.collection("tasks").find({ completed: false }).toArray((error, tasks) => {
-      if (error) {
-        return console.log("Unable to find tasks.");
-      } else {
-        console.log(tasks);
-      };
+    // // CRUD #2: Reading collections
+    // db.collection("tasks").find({ completed: false }).toArray((error, tasks) => {
+    //   if (error) {
+    //     return console.log("Unable to find tasks.");
+    //   } else {
+    //     console.log(tasks);
+    //   };
+    // });
+
+    // CRUD #3: Updating collections
+    db.collection("tasks").updateMany({
+      completed: false
+    }, {
+      $set: {
+        completed: true
+      }
+    }).then(result => {
+      console.log("Updated tasks: " + result.modifiedCount);
+    }).catch(error => {
+      console.log("Unable to update task.");
     });
+
   };
 });
