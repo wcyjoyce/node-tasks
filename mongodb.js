@@ -54,10 +54,9 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true, useUnifiedTopology: 
         completed: true
       }
     }).then(result => {
-      console.log("Updated tasks: " + result.modifiedCount);
+      result.modifiedCount === 0 ? console.log("No tasks updated.") : console.log("Updated tasks: " + result.modifiedCount);
     }).catch(error => {
       console.log("Unable to update task.");
     });
-
   };
 });
