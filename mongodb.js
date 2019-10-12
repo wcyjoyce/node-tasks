@@ -58,5 +58,14 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true, useUnifiedTopology: 
     }).catch(error => {
       console.log("Unable to update task.");
     });
+
+    // CRUD #4: Deleting collections
+    db.collection("tasks").deleteMany({
+      description: "Gym workout"
+    }).then(result => {
+      result.deletedCount === 0 ? console.log("No tasks deleted.") : console.log("Task deleted: " + result.deletedCount);
+    }).catch(error => {
+      console.log("Unable to delete task.");
+    });
   };
 });
