@@ -29,16 +29,16 @@ const User = mongoose.model("User", {
   }
 });
 
-const user = new User({
-  name: "Joyce",
-  age: "26",
-  email: "joyce@gmail.com"
-});
+// const user = new User({
+//   name: "Joyce",
+//   age: "26",
+//   email: "joyce@gmail.com"
+// });
 
-user.save().then(() => {
-  console.log("User created: " + user);
-}).catch(error => {
-  console.log("User cannot be added! " + error);
-});
+// user.save().then(() => {
+//   console.log("User created: " + user);
+// }).catch(error => {
+//   console.log("User cannot be added! " + error);
+// });
 
 module.exports = User;

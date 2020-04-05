@@ -14,14 +14,14 @@ const Task = mongoose.model("Task", {
   }
 });
 
-const task = new Task({
-  description: "First task"
-});
+// const task = new Task({
+//   description: "First task"
+// });
 
-task.save().then(() => {
-  console.log("Task created: " + task);
-}).catch(error => {
-  console.log("Task cannot be added! " + error);
-});
+// task.save().then(() => {
+//   console.log("Task created: " + task);
+// }).catch(error => {
+//   console.log("Task cannot be added! " + error);
+// });
 
 module.exports = Task;
