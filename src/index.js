@@ -122,6 +122,31 @@ app.put("/tasks/:id", (req, res) => {
   });
 });
 
+// CRUD #5: Deleting a task
+app.delete("/tasks/:id", (req, res) => {
+  const _id = req.params.id;
+
+  // Task.findByIdAndDelete(_id).then(task => {
+  //   res.send(task);
+  //   return Task.countDocuments({ completed: false });
+  // }).then(result => {
+  //   console.log("Tasks outstanding: " + result);
+  // }).catch(error => {
+  //   res.send(error);
+  // });
+
+  const deleteTask = async id => {
+    const task = await Task.findByIdAndDelete(id);
+    const count = await Task.countDocuments({ completed: false });
+    return count;
+  };
+
+  deleteTask("5e8999c73839634396ad1a35").then(count => {
+    console.log("Tasks outstanding: " + count);
+  }).catch(error => {
+    console.log(error);
+  });
+
   // const updateUser = async (id, age) => {
   //   const user = await User.findByIdAndUpdate(id, { age });
   //   const count = User.countDocuments({ age });
@@ -133,7 +158,6 @@ app.put("/tasks/:id", (req, res) => {
   // }).catch(error => {
   //   console.log(error);
   // });
-
 });
 
 app.listen(port, () => {
