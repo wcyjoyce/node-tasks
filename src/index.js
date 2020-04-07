@@ -49,13 +49,25 @@ app.get("/users/:id", (req, res) => {
 app.put("/users/:id", (req, res) => {
   const _id = req.params.id;
 
-  User.findByIdAndUpdate(_id, { age: 30 }).then(user => {
-    res.send(user);
-    return User.countDocuments({ age: 30 });
-  }).then(result => {
-    console.log("Count: " + result);
+  // User.findByIdAndUpdate(_id, { age: 30 }).then(user => {
+  //   res.send(user);
+  //   return User.countDocuments({ age: 30 });
+  // }).then(result => {
+  //   console.log("Count: " + result);
+  // }).catch(error => {
+  //   res.send(error);
+  // });
+
+  const updateUser = async (id, age) => {
+    const user = await User.findByIdAndUpdate(id, { age });
+    const count = await User.countDocuments({ age });
+    return count;
+  };
+
+  updateUser("5e89b093e4a1705000f5ba84", 20).then(count => {
+    console.log("Count: " + count);
   }).catch(error => {
-    res.send(error);
+    console.log(error);
   });
 });
 
@@ -108,6 +120,20 @@ app.put("/tasks/:id", (req, res) => {
   }).catch(error => {
     res.send(error);
   });
+});
+
+  // const updateUser = async (id, age) => {
+  //   const user = await User.findByIdAndUpdate(id, { age });
+  //   const count = User.countDocuments({ age });
+  //   return count;
+  // };
+
+  // updateUser("5e89b093e4a1705000f5ba84", 20).then(count => {
+  //   console.log("Count: " + count);
+  // }).catch(error => {
+  //   console.log(error);
+  // });
+
 });
 
 app.listen(port, () => {
