@@ -12,37 +12,66 @@ app.use(express.json()); // parse incoming JSON to an object for further handlin
 ///// MODEL #1: USERS /////
 
 // CRUD #1: Creating users
-app.post("/users", (req, res) => {
+app.post("/users", async (req, res) => {
   const user = new User(req.body);
 
-  user.save().then(() => {
+  // user.save().then(() => {
+  //   res.status(201).send(user);
+  // }).catch(error => {
+  //   res.status(400).send(error);
+  // });
+
+  // Refactoring with async/await
+  try {
+    await user.save();
     res.status(201).send(user);
-  }).catch(error => {
+  } catch (error) {
     res.status(400).send(error);
-  });
+  };
 });
 
 // CRUD #2: Fetching all users
-app.get("/users", (req, res) => {
-  User.find({}).then(users => {
+app.get("/users", async (req, res) => {
+  // User.find({}).then(users => {
+  //   res.send(users);
+  // }).catch(error => {
+  //   res.status(500).send(error);
+  // });
+
+  // Refactoring with async/await
+  try {
+    const users = await User.find({});
     res.send(users);
-  }).catch(error => {
-    res.status(400).send(error);
-  });
+  } catch (error) {
+    res.status(500).send(error);
+  };
 });
 
 // CRUD #3: Fetching individual user
-app.get("/users/:id", (req, res) => {
+app.get("/users/:id", async (req, res) => {
   const _id = req.params.id;
 
-  User.findById(_id).then(user => {
+  // User.findById(_id).then(user => {
+  //   if (!user) {
+  //     return res.status(404).send();
+  //   } else {
+  //   res.send(user);
+  //   };
+  // }).catch(error => {
+  //   res.status(500).send(error);
+  // });
+
+  // Refactoring with async/await
+  try {
+    const user = await User.findById(_id);
     if (!user) {
       return res.status(404).send();
+    } else {
+      res.send(user);
     };
-    res.send(user);
-  }).catch(error => {
+  } catch (error) {
     res.status(500).send(error);
-  });
+  };
 });
 
 // CRUD #4: Updating a user (via promise chaining)
