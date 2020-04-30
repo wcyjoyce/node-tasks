@@ -74,30 +74,28 @@ app.get("/users/:id", async (req, res) => {
   };
 });
 
-// CRUD #4: Updating a user (via promise chaining)
-app.put("/users/:id", (req, res) => {
-  const _id = req.params.id;
+// CRUD #4: Updating a user
+app.patch("/users/:id", async (req, res) => {
+  // Check if the updated fields are editable
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["name", "age", "email"];
+  const isValid = updates.every(update => allowedUpdates.includes(update)); // "every" - everything needs to be true in order to return true
 
-  // User.findByIdAndUpdate(_id, { age: 30 }).then(user => {
-  //   res.send(user);
-  //   return User.countDocuments({ age: 30 });
-  // }).then(result => {
-  //   console.log("Count: " + result);
-  // }).catch(error => {
-  //   res.send(error);
-  // });
-
-  const updateUser = async (id, age) => {
-    const user = await User.findByIdAndUpdate(id, { age });
-    const count = await User.countDocuments({ age });
-    return count;
+  if (!isValid) {
+    return res.status(400).send({ error: "Invalid updates." });
   };
 
-  updateUser("5e89b093e4a1705000f5ba84", 20).then(count => {
-    console.log("Count: " + count);
-  }).catch(error => {
-    console.log(error);
-  });
+  try {
+    const _id = req.params.id;
+    const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true });
+    if (!user) {
+      res.status(404).send();
+    } else {
+      res.send(user);
+    };
+  } catch (error) {
+    res.status(400).send(error);
+  };
 });
 
 ///// MODEL #2: TASKS /////
