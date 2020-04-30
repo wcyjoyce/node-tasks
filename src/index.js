@@ -97,6 +97,16 @@ app.patch("/users/:id", async (req, res) => {
   };
 });
 
+// CRUD #5: Deleting a user
+app.delete("/users/:id", async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    return !user ? res.status(404).send(error) : res.send(user);
+  } catch (error) {
+    res.send(500).send(error);
+  };
+});
+
 ///// MODEL #2: TASKS /////
 
 // CRUD #1: Creating tasks
