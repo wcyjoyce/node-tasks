@@ -86,8 +86,7 @@ app.patch("/users/:id", async (req, res) => {
   };
 
   try {
-    const _id = req.params.id;
-    const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true });
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!user) {
       res.status(404).send();
     } else {
@@ -163,28 +162,24 @@ app.get("/tasks/:id", async (req, res) => {
 });
 
 // CRUD #4: Updating a task
-app.put("/tasks/:id", async (req, res) => {
-  const _id = req.params.id;
+app.patch("/tasks/:id", async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["description", "completed"];
+  const isValid = updates.every(update => allowedUpdates.includes(update));
 
-  // Task.findByIdAndUpdate(_id, { completed: true }).then(task => {
-  //   res.send(task);
-  //   console.log(task);
-  //   return Task.countDocuments({ completed: false });
-  // }).then(result => {
-  //   console.log("Tasks outstanding: " + result);
-  // }).catch(error => {
-  //   res.send(error);
-  // });
+  if (!isValid) {
+    return res.status(400).send({ error: "Invalid updates." });
+  };
 
-  // Refactoring with async/await
   try {
-    const task = await Task.findByIdAndUpdate(_id, { completed: true });
-    const count = await Task.countDocuments({ completed: true })
-    res.send(task);
-    console.log(task);
-    return count;
-  } catch(error) {
-    res.send(error);
+    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!task) {
+      res.status(404).send();
+    } else {
+      res.send(task);
+    };
+  } catch (error) {
+    res.status(400).send(error);
   };
 });
 
