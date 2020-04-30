@@ -26,19 +26,18 @@ const User = mongoose.model("User", {
         throw new Error("Email is invalid.");
       };
     }
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 7,
+    trim: true,
+    validate(value) {
+      if (value.toLowerCase().includes("password")) {
+        throw new Error("Password must be at least 7 characters and cannot contain 'password.")
+      };
+    }
   }
 });
-
-// const user = new User({
-//   name: "Joyce",
-//   age: "26",
-//   email: "joyce@gmail.com"
-// });
-
-// user.save().then(() => {
-//   console.log("User created: " + user);
-// }).catch(error => {
-//   console.log("User cannot be added! " + error);
-// });
 
 module.exports = User;
