@@ -132,30 +132,13 @@ app.patch("/tasks/:id", async (req, res) => {
 });
 
 // CRUD #5: Deleting a task
-app.delete("/tasks/:id", (req, res) => {
-  const deleteTask = async id => {
-    const task = await Task.findByIdAndDelete(id);
-    const count = await Task.countDocuments({ completed: false });
-    return count;
+app.delete("/tasks/:id", async (req, res) => {
+  try {
+    const task = await Task.findByIdAndDelete(req.params.id);
+    return !task ? res.status(400).send(error) : res.send(task);
+  } catch (error) {
+    res.status(500).send(error);
   };
-
-  deleteTask("5e8999c73839634396ad1a35").then(count => {
-    console.log("Tasks outstanding: " + count);
-  }).catch(error => {
-    console.log(error);
-  });
-
-  // const updateUser = async (id, age) => {
-  //   const user = await User.findByIdAndUpdate(id, { age });
-  //   const count = User.countDocuments({ age });
-  //   return count;
-  // };
-
-  // updateUser("5e89b093e4a1705000f5ba84", 20).then(count => {
-  //   console.log("Count: " + count);
-  // }).catch(error => {
-  //   console.log(error);
-  // });
 });
 
 app.listen(port, () => {
