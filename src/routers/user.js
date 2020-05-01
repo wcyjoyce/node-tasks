@@ -38,15 +38,21 @@ router.get("/users/:id", async (req, res) => {
 router.patch("/users/:id", async (req, res) => {
   // Check if the updated fields are editable
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["name", "age", "email"];
+  const allowedUpdates = ["name", "age", "email", "password"];
   const isValid = updates.every(update => allowedUpdates.includes(update)); // "every" - everything needs to be true in order to return true
+
 
   if (!isValid) {
     return res.status(400).send({ error: "Invalid updates." });
   };
 
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    // Only saving parameters that have been modified
+    const user = await User.findById(req.params.id);
+    updates.forEach(update => user[update] = req.body[update]);
+    await user.save();
+
+    // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     return !user ? res.status(404).send() : res.send(user);
   } catch (error) {
     res.status(400).send(error);
