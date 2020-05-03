@@ -65,7 +65,17 @@ router.delete("/users/:id", async (req, res) => {
     const user = await User.findByIdAndDelete(req.params.id);
     return !user ? res.status(404).send(error) : res.send(user);
   } catch (error) {
-    res.send(500).send(error);
+    res.status(500).send(error);
+  };
+});
+
+// #6: Logging in
+router.post("/users/login", async (req,res) => {
+  try {
+    const user = await User.findByCredentials(req.body.email, req.body.password);
+    res.send(user);
+  } catch (error) {
+    res.status(400).send();
   };
 });
 

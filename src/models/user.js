@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
       trim: true,
       lowercase: true,
       validate(value) {
@@ -42,6 +43,22 @@ const userSchema = new mongoose.Schema(
     }
   }
 );
+
+// Setting up a credentials function so that this can be accessed in the router
+userSchema.statics.findByCredentials = async (email, password) => {
+  const user = await User.findOne({ email: email });
+
+  if (!user) {
+    throw new Error("This email cannot be found.")
+  } else {
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      throw new Error("The email/password combination is incorrect.")
+    } else {
+      return user;
+    };
+  };
+};
 
 // Adding middleware: validating something before user is saved/updated
 userSchema.pre("save", async function(next) {
