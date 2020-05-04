@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema(
   {
@@ -58,6 +59,13 @@ userSchema.statics.findByCredentials = async (email, password) => {
       return user;
     };
   };
+};
+
+// Generate authentication token method
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token = jwt.sign({ _id: user._id.toString() }, "hello");
+  return token;
 };
 
 // Adding middleware: validating something before user is saved/updated
