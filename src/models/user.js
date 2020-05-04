@@ -41,7 +41,13 @@ const userSchema = new mongoose.Schema(
           throw new Error("Password must be at least 7 characters and cannot contain 'password'.")
         };
       }
-    }
+    },
+    tokens: [{
+      token: {
+        type: String,
+        required: true
+      }
+    }]
   }
 );
 
@@ -65,6 +71,10 @@ userSchema.statics.findByCredentials = async (email, password) => {
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, "hello");
+
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+
   return token;
 };
 
