@@ -1,7 +1,8 @@
 const express = require("express");
 const router = new express.Router();
 
-const User = require("../models/user.js")
+const User = require("../models/user.js");
+const auth = require("../middleware/auth.js");
 
 // CRUD #1: Creating users
 router.post("/users", async (req, res) => {
@@ -16,13 +17,18 @@ router.post("/users", async (req, res) => {
 });
 
 // CRUD #2: Fetching all users
-router.get("/users", async (req, res) => {
+router.get("/users", auth, async (req, res) => {
   try {
     const users = await User.find({});
     res.send(users);
   } catch (error) {
     res.status(500).send(error);
   };
+});
+
+// CRUD #2.5 Fetching own individual profile
+router.get("/users/profile", auth, async (req, res) => {
+  res.send(req.user);
 });
 
 // CRUD #3: Fetching individual user
