@@ -26,9 +26,9 @@ router.get("/users", auth, async (req, res) => {
   };
 });
 
-// CRUD #2.5 Fetching own individual profile
-router.get("/users/profile", auth, async (req, res) => {
-  res.send(req.user);
+// CRUD #2.5: Fetching own individual profile
+router.get("/users/profile", auth, (req, res) => {
+  return res.send(req.user);
 });
 
 // CRUD #3: Fetching individual user
@@ -93,6 +93,17 @@ router.post("/users/logout", auth, async (req, res) => {
     req.user.tokens = req.user.tokens.filter(token => {
       return token.token !== req.token;
     });
+    await req.user.save();
+    res.send();
+  } catch (error) {
+    res.status(500).send();
+  };
+});
+
+// #8: Logging out all sessions
+router.post("/users/logout-all", auth, async (req, res) => {
+  try {
+    req.users.token = [];
     await req.user.save();
     res.send();
   } catch (error) {

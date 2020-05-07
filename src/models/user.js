@@ -3,6 +3,8 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+
+// NB: tokens are in an array so that users can be logged in via multiple devices
 const userSchema = new mongoose.Schema(
   {
     name: {
