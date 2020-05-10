@@ -69,6 +69,17 @@ userSchema.statics.findByCredentials = async (email, password) => {
   };
 };
 
+// Create public profile - removes password and token when displaying user credentials
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+
+  delete userObject.password;
+  delete userObject.tokens;
+
+  return userObject;
+};
+
 // Generate authentication token method
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
